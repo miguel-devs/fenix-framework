@@ -7,7 +7,7 @@
     </div>
 </div>
 <div class="mb-3 row">
-    <label for="apellido" class="col-sm-2 col-form-label">Apellido</label>
+    <label for="apellido" class="col-sm-2 col-form-label">Apellidos</label>
     <div class="col-sm-10">
       <input type="apellido" class="form-control" id="apellido" name="apellido" value="<?= $validator->getOldValue("apellido"); ?>">
       <span class="text-danger"><?= $validator->getMensaje("apellido"); ?></span>

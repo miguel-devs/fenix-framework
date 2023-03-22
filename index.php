@@ -8,6 +8,7 @@ ini_set('error_log','log/php_error.log');
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
+
 $router = new Bramus\Router\Router();
 
 //$router->setNamespace('\App\Ecommerce\Controllers');

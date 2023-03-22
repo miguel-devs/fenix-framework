@@ -37,37 +37,40 @@ class ClienteController extends Controller {
  
     $validator = new Validation;
     
-    try{
    
     $data = [
       "nombre"   => $validator->setValuePost("nombre")->required()->sanitize("palabra")->maxLength(25)->minLength(4)->getValue(),
       "apellido" => $validator->setValuePost("apellido")->required()->sanitize("palabra")->maxLength(25)->minLength(4)->getValue(),
-      "usuario"  => $validator->setValuePost("usuario")->required()->getValue(),
+      "correo"   => $validator->setValuePost("correo")->unique("usuarios")->required()->isEmail()->getValue(),
+      "usuario"  => $validator->setValuePost("usuario")->unique("usuarios")->required()->getValue(),
       "rolId"    => 2,
-      "correo"   => $validator->setValuePost("correo")->required()->isEmail()->getValue(),
       "password" => $validator->setValuePost("password")->required()->getValue(),
      ];
+
     if($validator->error()){
       View::show("Registrar","Cliente/Create",["validator" =>$validator]);
 
     }else{
-        $Usuarios = new Usuarios($data); 
-        if($Usuarios->save($data)){
-          //View::show("Index","Cliente/In",["validator" =>$validator]);
-        //  parent::redirect("/tienda/");
+      $stripe = new \Stripe\StripeClient($_ENV['STRIPE_SECRET_KEY']);
 
-        }else{
+      
+      $customer = $stripe->customers->create([
+        "email" =>  $data["correo"],
+        'name' => $data["nombre"]." ".$data["apellido"],
+      ]);
 
-        }
+      
+        $data["stripeId"] = $customer->id;
+        $Usuarios = new Usuarios($data);
+        $Usuarios->save($data);
+        View::show("Registrar","Cliente/Create",["validator" =>$validator]);
+
 
     }
    
     
-   
+ 
   
-    }catch(Exception  $e){
-       echo "Hubo un error";
-    }
    
   }
 

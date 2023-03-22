@@ -1,6 +1,10 @@
 <?php 
 namespace App\Ecommerce\Core\bin;
 
+use App\Ecommerce\Core\Db;
+
+
+
 Class Validation{
     private   $public = array();
     private   $messages = array();
@@ -73,6 +77,18 @@ Class Validation{
             }
             return $this;
         
+    }
+
+    public function unique($table){
+        $db = new Db();
+        $sql = "select id from ".$table." where ". $this->field . " = '$this->value' ";
+        $res = $db->conn->prepare($sql);
+        $res->execute();
+        if($res->fetchColumn() > 0 ){
+            $this->error = true; 
+            $this->messages[$this->field][] = "Este ".$this->field." ya se encuentra registrado";
+        }
+        return $this;
     }
 
 

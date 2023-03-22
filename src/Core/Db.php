@@ -1,5 +1,5 @@
 <?php 
-namespace App\Ecommerce\DataBase;
+namespace App\Ecommerce\Core;
 use PDO;
 
 
@@ -8,12 +8,19 @@ class Db  extends PDO{
 
   
 
-    private $server = "localhost";
-    private $database = "tienda";
-    private $usuario = "root";
-    private $password = "";
-    public $conn;
+    private $server   ;
+    private $database ;
+    private $usuario  ;
+    private $password ;
+    public  $conn;
+
+
     public function __construct(){
+       $this->server    = $_ENV['DB_HOST'];
+       $this->database  = $_ENV['DB_DATABASE'];
+       $this->usuario   = $_ENV['DB_USERNAME'];
+       $this->password = $_ENV['DB_PASSWORD'];
+
         try {
             $this->conn = new PDO("mysql:host=$this->server;dbname=$this->database", $this->usuario, $this->password);
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

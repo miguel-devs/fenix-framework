@@ -16,7 +16,6 @@ class Usuarios extends Model {
     protected $updated_at;
 
     public function __construct($data){
-        $this->table = "clientes";
         $this->id =  (isset($data["id"]))? $data["id"] : null;
         $this->nombre = $data["nombre"];
         $this->apellido = $data["apellido"];
@@ -24,21 +23,17 @@ class Usuarios extends Model {
         $this->rolId = $data["rolId"];
         $this->correo = $data["correo"];
         $this->password = $data["password"];
-        $this->stripeUserId = 125566585252145;
-        
+        $this->stripeUserId = $data["stripeId"];
         parent::__construct();
         $this->table = "usuarios";
     }
 
- 
     public function geterTipoUsuario(){
          return $this->tipoUsuario;
     }
-
     public function seterTipoUsuario($tipo){
         $this->tipoUsuarioId = $tipo;
     }
-
     public function getId(){
         return $this->id;
     }
@@ -48,7 +43,6 @@ class Usuarios extends Model {
     public function getApellido(){
         return $this->apellido;
     }
-    
     public function getNombreUsuario(){
         return $this->nombreUsuario;
     }
@@ -58,8 +52,5 @@ class Usuarios extends Model {
     public function getCorreo(){
         return $this->correo;
     }
-   
-
-
 }
 ?>

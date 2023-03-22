@@ -1,6 +1,7 @@
 <?php
 namespace App\Ecommerce\Core;
-use App\Ecommerce\DataBase\Db;
+
+use App\Ecommerce\Core\Db;
 use App\Ecommerce\Traits\ArrayFunctions;
 use App\Ecommerce\Traits\StringFunctions;
 
@@ -165,6 +166,7 @@ class Model {
       }
   
       public function save($data){
+
         $sql = "INSERT INTO $this->table  ";
         $sql .= "(";
         $sql .=  self::concatColumnsByKey($data); 
@@ -172,6 +174,60 @@ class Model {
         $sql .=  self::concatValues($data); 
         $res = $this->conn->prepare($sql);
         return $res->execute($data);
+
+      }
+
+      public function saveReturnId($data){
+
+        $sql = "INSERT INTO $this->table  ";
+        $sql .= "(";
+        $sql .=  self::concatColumnsByKey($data); 
+        $sql .= ") VALUES ";
+        $sql .=  self::concatValues($data); 
+        $res = $this->conn->prepare($sql);
+        $res->execute($data);
+        $lastId = $this->conn->lastInsertId();
+        return $lastId; 
+      }
+
+      public function whereOr($columnas = []){
+
+        $endKey = Model::endKey( $columnas );
+
+        if(!empty($columnas)){
+          $sql = "SELECT * FROM $this->table ";
+          $sql .= " WHERE ";
+          foreach($columnas as $clave => $valor){
+            if($clave == $endKey ){
+              $sql .= $clave." = '". $valor."'"  ;
+            }else{
+              $sql .= $clave." = '". $valor. "' || " ;
+            }
+          }
+          $res = $this->conn->prepare($sql);
+          return  $res->execute();
+
+        }
+      }
+
+      public function where($columnas = []){
+
+        $endKey = Model::endKey( $columnas );
+
+        if(!empty($columnas)){
+          $sql = "SELECT * FROM $this->table ";
+          $sql .= " WHERE ";
+          foreach($columnas as $clave => $valor){
+            if($clave == $endKey ){
+              $sql .= $clave." = '". $valor."'"  ;
+            }else{
+              $sql .= $clave." = '". $valor. "' || " ;
+            }
+          }
+          $res = $this->conn->prepare($sql);
+         return $res->execute();
+
+        }
       }
 
      
